@@ -38,18 +38,18 @@ app.post('/signUp',(req,res)=>{
     }
 
 })
-
+//authenticateToken,
 app.get('/users',authenticateToken,(req,res)=>{
     
     res.send(users)
 
 })
 app.post('/login',(req ,res)=>{
-    const {Username,Password}=req.body;
+    const {username,password}=req.body;
 
-    const notmatch=users.filter(user=>user.username==Username )
+    const notmatch=users.filter(user=>user.username==username )
     if(notmatch.length){
-        const encritedToken=jwt.sign({username:Username,password:Password},SECRET_KEY)
+        const encritedToken=jwt.sign({username:username,password:password},SECRET_KEY)
         res.json(encritedToken);
     }
     else{
@@ -59,7 +59,14 @@ app.post('/login',(req ,res)=>{
     }
 })
 
-
+app.delete('/delete/:username',authenticateToken,(req,res)=>{
+  const username=req.params.username
+  console.log(username);
+  const reminderUsers=users.filter(user=>user.username!=username)
+  users=[]
+  users.push(reminderUsers);
+  res.send('delete account');
+})
 
 app.listen(port,()=>{
     console.log('PORT IS RUNNING AT :',port)
